@@ -24,19 +24,55 @@ def receive_message():
         for event in output['entry']:
            messaging = event['messaging']
            for message in messaging:
+                print(message)
                 if message.get('message'):
                     #Facebook Messenger ID for user so we know where to send response back to
                     recipient_id = message['sender']['id']
-                    if message['message'].get('text'):
+                    msg = message['message'].get('text')
+                    if msg:
+                        # msg = message['message'].get('text')
+                        send_return_message(msg, recipient_id)
                         # response_sent_text = get_message()
-                        response_sent_text = puzzle_message()
-                        send_message(recipient_id, response_sent_text)
+                        # response_sent_text = puzzle_message()
+                        # send_message(recipient_id, response_sent_text)
                     #if user sends us a GIF, photo,video, or any other non-text item
                     if message['message'].get('attachments'):
                         # response_sent_nontext = get_message()
                         response_sent_nontext = puzzle_message()
                         send_message(recipient_id, response_sent_nontext)
         return "Message Processed"
+
+
+def send_return_message(msg, recipient_id):
+    print("This is the message: ")
+    print(msg)
+
+    if msg.lower().replace(' ', '') == "getstarted":
+        print("This clause happened")
+
+        message1 = "♟️ Welcome to the Chess bot! This bot will periodically send you chess puzzles for you to do. ♟️"
+        message2 = "Chess puzzles are a good way to improve your skills as a chess player and are great exercises to do often."
+        message3 = "You will receive a chess puzzle everyday at 20:00 EST. 👍 "
+
+
+        send_message(recipient_id, message1)
+        send_message(recipient_id, message2)
+        send_message(recipient_id, message3)
+
+    elif msg.lower().replace(' ', '') == "sendpuzzle":
+        send_message(recipient_id, puzzle_message())
+
+    else:
+        # if they are registered
+        message1 = "That is not a command. You can perform the following operations:"
+        message2 = "'Get Started' to register for getting sent puzzles."
+        message3 = "'Send Puzzle' to send a puzzle"
+
+        send_message(recipient_id, message1)
+        send_message(recipient_id, message2)
+        send_message(recipient_id, message3)
+        
+
 
 
 def verify_fb_token(token_sent):
@@ -85,7 +121,7 @@ def puzzle_message():
     # url = base_url.format(get_id(base_url.format(choice(topics))))
     url = base_url.format(choice(topics))
 
-    return "Here is your random puzzle for the day:\n{}\nBest of luck! :)".format(url)
+    return "Here is your random puzzle for you to attempt:\n{}\nBest of luck! :)".format(url)
 
 def send_message(recipient_id, response):
     #sends user the text message provided via input response parameter
