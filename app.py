@@ -1,4 +1,9 @@
-import random
+from random import choice
+import re
+from urllib.request import urlopen
+
+from bs4 import BeautifulSoup
+import requests
 
 from flask import Flask, request
 from pymessenger.bot import Bot
@@ -23,11 +28,13 @@ def receive_message():
                     #Facebook Messenger ID for user so we know where to send response back to
                     recipient_id = message['sender']['id']
                     if message['message'].get('text'):
-                        response_sent_text = get_message()
+                        # response_sent_text = get_message()
+                        response_sent_text = puzzle_message()
                         send_message(recipient_id, response_sent_text)
                     #if user sends us a GIF, photo,video, or any other non-text item
                     if message['message'].get('attachments'):
-                        response_sent_nontext = get_message()
+                        # response_sent_nontext = get_message()
+                        response_sent_nontext = puzzle_message()
                         send_message(recipient_id, response_sent_nontext)
         return "Message Processed"
 
@@ -45,11 +52,40 @@ def get_message():
     # return random.choice(sample_responses)
     return "Here is your random puzzle for the day: https://lichess.org/training. Best of luck! :)"
 
+# def get_id(url):
+
+#     webpage = urlopen(url)
+#     soup = BeautifulSoup(webpage, 'html.parser')
+#     title = soup.find("meta",  property="og:title")
+#     for tag in soup.find_all("meta"):
+#         if tag.get("property", None) == "og:title":
+#             puzzle_id = tag.get("content", None)
+#         elif tag.get("property", None) == "og:url":
+#             puzzle_id = tag.get("content", None)
+#     print("This is puzzle id: ", puzzle_id)
+#     puzzle_id = re.search("#[a-zA-Z0-9]{5}",puzzle_id).group().replace("#", "")
+
+#     # r = requests.get(url)
+#     # if r.status_code == 200:
+#     # puzzle_id = re.search("#[a-zA-Z0-9]{5}",).group().replace("#", "")
+#     return puzzle_id
+
 def puzzle_message():
     topics = ['opening', 'middlegame', 'endgame', 'rookEndgame', 'bishopEndgame', 'pawnEndgame', 'knightEndgame',
-              'queenEndgame', 'queenRookEndgame']
-    sample_responses = ["I love you too baby! <3"]
-    return "Here is your random puzzle for the day: https://lichess.org/training. Best of luck! :)"
+              'queenEndgame', 'queenRookEndgame', 'advancedPawn', 'attackingF2F7', 'capturingDefender', 'discoveredAttack',
+              'doubleCheck', 'exposedKing', 'fork', 'hangingPiece', 'kingsideAttack', 'pin', 'queensideAttack', 'sacrifice'
+              'skewer', 'trappedPiece', 'attraction', 'clearance' 'defensiveMove', 'deflection', 'interference', 'intermezzo',
+              'quietMove', 'xRayAttack', 'zugzwang']
+
+    
+
+    # url = "https://lichess.org/training/{}".format(choice(topics))
+    base_url = "https://lichess.org/training/{}"
+    # url = get_id("https://lichess.org/training/{}".format(choice(topics)))
+    # url = base_url.format(get_id(base_url.format(choice(topics))))
+    url = base_url.format(choice(topics))
+
+    return "Here is your random puzzle for the day:\n{}\nBest of luck! :)".format(url)
 
 def send_message(recipient_id, response):
     #sends user the text message provided via input response parameter
@@ -58,5 +94,6 @@ def send_message(recipient_id, response):
 
 
 if __name__ == '__main__':
+    print("App is now running...")
     app.run()
 
