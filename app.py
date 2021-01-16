@@ -2,7 +2,7 @@ from random import choice
 import re
 from urllib.request import urlopen
 
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 import requests
 
 from flask import Flask, request
