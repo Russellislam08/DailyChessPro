@@ -1,6 +1,6 @@
 import random
 
-from flask import Flask, request
+from flask import Flask, request, render_template
 from pymessenger.bot import Bot
 
 app = Flask(__name__)
@@ -8,29 +8,35 @@ ACCESS_TOKEN = 'EAASDGuTBaFYBAIhnP3P4j5QOopRUndjpzVM4ZAwuPnsEuTPnd8RHdNPEKVVNPgr
 VERIFY_TOKEN = 'this_is_test_token'
 bot = Bot(ACCESS_TOKEN)
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/", methods=['GET'])
 def receive_message():
+    """ Return a friendly HTTP greeting. """
+    return "Hello World!\n"
+#    if request.method == 'GET':
+#        token_sent = request.args.get("hub.verify_token")
+#        return verify_fb_token(token_sent)
+#    else:
+#        output = request.get_json()
+#        for event in output['entry']:
+#           messaging = event['messaging']
+#           for message in messaging:
+#                if message.get('message'):
+#                    #Facebook Messenger ID for user so we know where to send response back to
+#                    recipient_id = message['sender']['id']
+#                    if message['message'].get('text'):
+#                        response_sent_text = get_message()
+#                        send_message(recipient_id, response_sent_text)
+#                    #if user sends us a GIF, photo,video, or any other non-text item
+#                    if message['message'].get('attachments'):
+#                        response_sent_nontext = get_message()
+#                        send_message(recipient_id, response_sent_nontext)
+#        return "Message Processed"
 
-    if request.method == 'GET':
-        token_sent = request.args.get("hub.verify_token")
-        return verify_fb_token(token_sent)
-    else:
-        output = request.get_json()
-        for event in output['entry']:
-           messaging = event['messaging']
-           for message in messaging:
-                if message.get('message'):
-                    #Facebook Messenger ID for user so we know where to send response back to
-                    recipient_id = message['sender']['id']
-                    if message['message'].get('text'):
-                        response_sent_text = get_message()
-                        send_message(recipient_id, response_sent_text)
-                    #if user sends us a GIF, photo,video, or any other non-text item
-                    if message['message'].get('attachments'):
-                        response_sent_nontext = get_message()
-                        send_message(recipient_id, response_sent_nontext)
-        return "Message Processed"
 
+@app.route("/sendpuzzle", methods=['GET'])
+def receive_message():
+    """ Return a friendly HTTP greeting. """
+    return "SENDING PUZZLE\n"
 
 def verify_fb_token(token_sent):
     if token_sent == VERIFY_TOKEN:

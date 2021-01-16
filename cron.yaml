@@ -1,0 +1,4 @@
+cron:
+- description: "daily puzzle"
+  url: /sendpuzzle
+  schedule: every 2 mins
