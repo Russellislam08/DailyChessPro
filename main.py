@@ -57,7 +57,6 @@ def send_return_message(msg, recipient_id):
     msg = msg.lower().replace(' ', '')
 
     if msg == "subscribe":
-
         if get_user(recipient_id):
             message1 = "You are already subscribed for daily chess puzzles!"
 
@@ -107,6 +106,11 @@ def send_return_message(msg, recipient_id):
         send_message(recipient_id, message8)
         send_message(recipient_id, message9)
 
+    elif msg == "hi" or msg == "hello" or msg == "hey":
+        message = "Hey there! :)"
+        send_message(recipient_id, message)
+        send_return_message("help", recipient_id)
+
     elif msg == "unsubscribe":
         if delete_user(recipient_id):
 
@@ -123,7 +127,7 @@ def send_return_message(msg, recipient_id):
             send_message(recipient_id, message2)
 
     else:
-        message1 = "Sorry 😥 I did not understand that command. Type help if you require assistance."
+        message1 = "Sorry 😥 I did not understand that command. Type \"help\" if you want to see what I can do."
         send_message(recipient_id, message1)
 
 
