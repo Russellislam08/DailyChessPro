@@ -11,7 +11,7 @@ from pymessenger.bot import Bot
 app = Flask(__name__)
 ACCESS_TOKEN = 'EAASDGuTBaFYBAIhnP3P4j5QOopRUndjpzVM4ZAwuPnsEuTPnd8RHdNPEKVVNPgrMc9tQt3OvmkPEpjaXr4uvNgXXPIsqIzFTJBaSTD7JUaZA3mZAp0VmZBIFrvcLCAP00KqIpVjALZCCvM6EgyVCydWAeQtfUlRdRgN3XNWAx8AZDZD'
 VERIFY_TOKEN = 'this_is_test_token'
-bot = Bot(ACCESS_TOKEN)
+BOT = Bot(ACCESS_TOKEN)
 
 @app.route("/", methods=['GET', 'POST'])
 def receive_message():
@@ -30,11 +30,7 @@ def receive_message():
                     recipient_id = message['sender']['id']
                     msg = message['message'].get('text')
                     if msg:
-                        # msg = message['message'].get('text')
                         send_return_message(msg, recipient_id)
-                        # response_sent_text = get_message()
-                        # response_sent_text = puzzle_message()
-                        # send_message(recipient_id, response_sent_text)
                     #if user sends us a GIF, photo,video, or any other non-text item
                     if message['message'].get('attachments'):
                         # response_sent_nontext = get_message()
@@ -48,29 +44,41 @@ def send_return_message(msg, recipient_id):
 
     msg = msg.lower().replace(' ', '')
 
-    if msg == "getstarted":
-        print("This clause happened")
+    if msg == "subscribe":
 
-        message1 = "♟️ Welcome to the Chess bot! This bot will periodically send you chess puzzles for you to do.♟️"
-        message2 = "Chess puzzles are a good way to improve your skills as a chess player and are great exercises to do often."
-        message3 = "You will receive a chess puzzle everyday at 20:00 EST. 👍 "
-        message4 = "Chess puzzles are powered by lichess.org"
+        print("This clause happened")
+        # message1 = "♟️ Welcome to the Chess bot! This bot will periodically send you chess puzzles for you to do.♟️"
+        # message2 = "Chess puzzles are a good way to improve your skills as a chess player and are great exercises to do often."
+        message1 = "You have subscribed for daily chess puzzles! :)"
+        message2 = "You will receive a chess puzzle everyday at 20:00 EST. 👍 "
+        message3 = "Chess puzzles are powered by lichess.org"
 
         send_message(recipient_id, message1)
         send_message(recipient_id, message2)
         send_message(recipient_id, message3)
-        send_message(recipient_id, message4)
 
     elif msg == "sendpuzzle":
         send_message(recipient_id, puzzle_message())
 
+    elif msg == "status":
+        # if registered
+
+        # else
+        message1 = "You are currently not registered for daily chess puzzles."
+        send_message(recipient_id, message1)
+
     elif msg == "help":
-        message1 = "Here are the following commands that you may use: "
-        message2 = "👉 \"Help\": This command."
-        message3 = "👉 \"Get Started / Subscribe\": Use this command to initialize daily puzzles, if haven't done so already."
-        message4 = "👉 \"Send Puzzle\": Use to receive a random puzzle"
-        message5 = "👉 \"Unsubscribe\": Unsubscribe from daily problems."
-        message6 = "👉 \"Status\": Check to see if you are getting daily puzzles. 🧩"
+        message1 = "♟️ Welcome to the Daily Chess Bot!️. This Messenger bot can send you daily chess puzzles for you to do. ♟️"
+        message2 = ("Chess puzzles are a good way to improve your skills as a chess player and are great exercises to do often. " +
+                   "Super Chess Grandmasters such as Hikaru Nakamura do puzzles regularly.")
+        message3 = "Chess puzzles are powered by lichess.org"
+
+        message4 = "Here is a list of the commands that you may use:"
+        message5 = "👉 \"Help\": This command."
+        message6 = "👉 \"Subscribe\": Use this command to initialize daily puzzles, if haven't done so already."
+        message7 = "👉 \"Send Puzzle\": Use to receive a random puzzle"
+        message8 = "👉 \"Unsubscribe\": Unsubscribe from daily problems."
+        message9 = "👉 \"Status\": Check to see if you are getting daily puzzles. 🧩"
 
         send_message(recipient_id, message1)
         send_message(recipient_id, message2)
@@ -78,6 +86,9 @@ def send_return_message(msg, recipient_id):
         send_message(recipient_id, message4)
         send_message(recipient_id, message5)
         send_message(recipient_id, message6)
+        send_message(recipient_id, message7)
+        send_message(recipient_id, message8)
+        send_message(recipient_id, message9)
 
     elif msg == "unsubscribe":
         message1 = "❌ You have unsubscribed from the daily puzzles."
@@ -87,7 +98,6 @@ def send_return_message(msg, recipient_id):
         send_message(recipient_id, message2)
 
     else:
-        # if they are registered
         message1 = "Sorry 😥 I did not understand that command. Type help if you require assistance."
         send_message(recipient_id, message1)
 
@@ -132,21 +142,18 @@ def puzzle_message():
 
     
 
-    # url = "https://lichess.org/training/{}".format(choice(topics))
     base_url = "https://lichess.org/training/{}"
     # url = get_id("https://lichess.org/training/{}".format(choice(topics)))
-    # url = base_url.format(get_id(base_url.format(choice(topics))))
     url = base_url.format(choice(topics))
 
     return "Here is your random puzzle for you to attempt:\n{}\nBest of luck! :)".format(url)
 
 def send_message(recipient_id, response):
     #sends user the text message provided via input response parameter
-    bot.send_text_message(recipient_id, response)
+    BOT.send_text_message(recipient_id, response)
     return "success"
 
 
 if __name__ == '__main__':
     print("App is now running...")
     app.run()
-
