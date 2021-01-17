@@ -5,8 +5,6 @@ from pprint import pprint
 
 import pymysql
 
-import mysql.connector
-from mysql.connector.constants import ClientFlag
 
 DB_USER = os.environ.get('CLOUD_SQL_USERNAME')
 DB_PASSWORD = os.environ.get('CLOUD_SQL_PASSWORD')
