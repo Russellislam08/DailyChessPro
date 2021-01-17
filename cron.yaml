@@ -1,4 +1,4 @@
 cron:
 - description: "daily puzzle"
   url: /sendpuzzle
-  schedule: every 5 mins
+  schedule: every 24 hours
