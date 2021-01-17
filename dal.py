@@ -15,10 +15,10 @@ TABLE_NAME = os.environ.get('DB_TABLE_NAME', None)
 
 
 # Queries
-SELECT_QUERY = ''' SELECT user_id FROM test; '''
-SELECT_SPECIFIC_USER_QUERY = ''' SELECT user_id FROM test WHERE user_id = %s; '''
-INSERT_QUERY = 'INSERT INTO test (user_id) VALUES (%s);'
-DELETE_QUERY = 'DELETE FROM test WHERE user_id = %s;'
+SELECT_QUERY = 'SELECT user_id FROM %s;'
+SELECT_SPECIFIC_USER_QUERY = 'SELECT user_id FROM %s WHERE user_id = %s;'
+INSERT_QUERY = 'INSERT INTO %s (user_id) VALUES (%s);'
+DELETE_QUERY = 'DELETE FROM %s WHERE user_id = %s;'
 
 
 def create_connection():
@@ -35,7 +35,7 @@ def get_all_users():
         conn = create_connection()
         c = get_cursor(conn)
 
-        c.execute(SELECT_QUERY);
+        c.execute(SELECT_QUERY, (TABLE_NAME,))
         response = c.fetchall()
 
         pprint(response)
@@ -56,7 +56,7 @@ def get_user(user_id):
         conn = create_connection()
         c = get_cursor(conn)
 
-        c.execute(SELECT_SPECIFIC_USER_QUERY, (user_id,));
+        c.execute(SELECT_SPECIFIC_USER_QUERY, (TABLE_NAME, user_id))
         response = c.fetchall()
         pprint(response)
     except Exception as e:
@@ -74,7 +74,7 @@ def add_user(user_id):
         conn = create_connection()
         c = get_cursor(conn)
 
-        c.execute(INSERT_QUERY, (user_id,));
+        c.execute(INSERT_QUERY, (TABLE_NAME, user_id));
         conn.commit()
 
 
@@ -93,7 +93,7 @@ def delete_user(user_id):
         conn = create_connection()
         c = get_cursor(conn)
 
-        c.execute(DELETE_QUERY, (user_id,));
+        c.execute(DELETE_QUERY, (TABLE_NAME, user_id))
         conn.commit()
 
         ret_val = c.rowcount

@@ -1,5 +1,6 @@
 from random import choice
 from urllib.request import urlopen
+import os
 import re
 
 # from bs4 import BeautifulSoup
@@ -10,8 +11,10 @@ from pymessenger.bot import Bot
 from dal import add_user, get_user, get_all_users, delete_user
 
 app = Flask(__name__)
-ACCESS_TOKEN = 'EAASDGuTBaFYBAIhnP3P4j5QOopRUndjpzVM4ZAwuPnsEuTPnd8RHdNPEKVVNPgrMc9tQt3OvmkPEpjaXr4uvNgXXPIsqIzFTJBaSTD7JUaZA3mZAp0VmZBIFrvcLCAP00KqIpVjALZCCvM6EgyVCydWAeQtfUlRdRgN3XNWAx8AZDZD'
-VERIFY_TOKEN = 'this_is_test_token'
+ACCESS_TOKEN = os.environ.get('REDIRECT_URI')
+# 'EAASDGuTBaFYBAIhnP3P4j5QOopRUndjpzVM4ZAwuPnsEuTPnd8RHdNPEKVVNPgrMc9tQt3OvmkPEpjaXr4uvNgXXPIsqIzFTJBaSTD7JUaZA3mZAp0VmZBIFrvcLCAP00KqIpVjALZCCvM6EgyVCydWAeQtfUlRdRgN3XNWAx8AZDZD'
+VERIFY_TOKEN = os.environ.get('VERIFY_TOKEN')
+# 'this_is_test_token'
 BOT = Bot(ACCESS_TOKEN)
 
 
@@ -119,7 +122,6 @@ def send_return_message(msg, recipient_id):
             send_message(recipient_id, message1)
             send_message(recipient_id, message2)
 
-
     else:
         message1 = "Sorry 😥 I did not understand that command. Type help if you require assistance."
         send_message(recipient_id, message1)
@@ -129,14 +131,6 @@ def verify_fb_token(token_sent):
     if token_sent == VERIFY_TOKEN:
         return request.args.get("hub.challenge")
     return "Verify endpoint has been triggered"
-
-#chooses a random message to send to the user
-def get_message():
-    # sample_responses = ["You are stunning!", "We're proud of you.", "Keep on being you!", "We're greatful to know you :)"]
-    sample_responses = ["I love you too baby! <3"]
-    # return selected item to the user
-    # return random.choice(sample_responses)
-    return "Here is your random puzzle for the day: https://lichess.org/training. Best of luck! :)"
 
 # def get_id(url):
 
@@ -162,8 +156,6 @@ def puzzle_message():
               'doubleCheck', 'exposedKing', 'fork', 'hangingPiece', 'kingsideAttack', 'pin', 'queensideAttack', 'sacrifice'
               'skewer', 'trappedPiece', 'attraction', 'clearance' 'defensiveMove', 'deflection', 'interference', 'intermezzo',
               'quietMove', 'xRayAttack', 'zugzwang']
-
-    
 
     base_url = "https://lichess.org/training/{}"
     # url = get_id("https://lichess.org/training/{}".format(choice(topics)))
