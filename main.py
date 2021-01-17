@@ -97,9 +97,7 @@ def send_return_message(msg, recipient_id):
         send_message(recipient_id, message9)
 
     elif msg == "unsubscribe":
-
-        if get_user(recipient_id):
-            delete_user(recipient_id)
+        if delete_user(recipient_id):
 
             message1 = "❌ You have unsubscribed from the daily puzzles."
             message2 = "To subscribe again in the future, use the subscribe command to do so."

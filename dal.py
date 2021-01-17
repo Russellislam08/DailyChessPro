@@ -90,12 +90,17 @@ def add_user(user_id):
 
 def delete_user(user_id):
     conn = None
+    ret_val = 0
     try:
         conn = create_connection()
         c = get_cursor(conn)
 
         c.execute(DELETE_QUERY, (user_id,));
         conn.commit()
+
+        ret_val = c.rowcount
+
+        print(ret_val)
 
     except Exception as e:
         print(e)
@@ -104,9 +109,7 @@ def delete_user(user_id):
     finally:
         if conn:
             conn.close()
-
-
-
+        return ret_val
 
 
 # if __name__ == '__main__':
@@ -118,9 +121,12 @@ def delete_user(user_id):
 #     get_all_users()
 #     print("This happens after")
 
-#     print("I am happening before AGAIN")
-#     delete_user('iamtestingthisid')
-#     get_all_users()
-#     print("I am happening after AGAIN")
+# get_all_users()
+# 
+# print("I am happening before AGAIN")
+# get_user("4917992418270840")
+# delete_user("4917992418270840")
+# get_all_users()
+# print("I am happening after AGAIN")
 
 
