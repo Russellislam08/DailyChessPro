@@ -1,6 +1,6 @@
 from random import choice
-import re
 from urllib.request import urlopen
+import re
 
 # from bs4 import BeautifulSoup
 import requests
@@ -44,41 +44,58 @@ def receive_message():
 
 
 def send_return_message(msg, recipient_id):
-    print("This is the message: ")
     print(msg)
 
-    if msg.lower().replace(' ', '') == "getstarted":
+    msg = msg.lower().replace(' ', '')
+
+    if msg == "getstarted":
         print("This clause happened")
 
-        message1 = "♟️ Welcome to the Chess bot! This bot will periodically send you chess puzzles for you to do. ♟️"
+        message1 = "♟️ Welcome to the Chess bot! This bot will periodically send you chess puzzles for you to do.♟️"
         message2 = "Chess puzzles are a good way to improve your skills as a chess player and are great exercises to do often."
         message3 = "You will receive a chess puzzle everyday at 20:00 EST. 👍 "
-
+        message4 = "Chess puzzles are powered by lichess.org"
 
         send_message(recipient_id, message1)
         send_message(recipient_id, message2)
         send_message(recipient_id, message3)
+        send_message(recipient_id, message4)
 
-    elif msg.lower().replace(' ', '') == "sendpuzzle":
+    elif msg == "sendpuzzle":
         send_message(recipient_id, puzzle_message())
+
+    elif msg == "help":
+        message1 = "Here are the following commands that you may use: "
+        message2 = "👉 \"Help\": This command."
+        message3 = "👉 \"Get Started / Subscribe\": Use this command to initialize daily puzzles, if haven't done so already."
+        message4 = "👉 \"Send Puzzle\": Use to receive a random puzzle"
+        message5 = "👉 \"Unsubscribe\": Unsubscribe from daily problems."
+        message6 = "👉 \"Status\": Check to see if you are getting daily puzzles. 🧩"
+
+        send_message(recipient_id, message1)
+        send_message(recipient_id, message2)
+        send_message(recipient_id, message3)
+        send_message(recipient_id, message4)
+        send_message(recipient_id, message5)
+        send_message(recipient_id, message6)
+
+    elif msg == "unsubscribe":
+        message1 = "❌ You have unsubscribed from the daily puzzles."
+        message2 = "To subscribe again in the future, use the subscribe command to do so."
+
+        send_message(recipient_id, message1)
+        send_message(recipient_id, message2)
 
     else:
         # if they are registered
-        message1 = "That is not a command. You can perform the following operations:"
-        message2 = "'Get Started' to register for getting sent puzzles."
-        message3 = "'Send Puzzle' to send a puzzle"
-
+        message1 = "Sorry 😥 I did not understand that command. Type help if you require assistance."
         send_message(recipient_id, message1)
-        send_message(recipient_id, message2)
-        send_message(recipient_id, message3)
-        
-
 
 
 def verify_fb_token(token_sent):
     if token_sent == VERIFY_TOKEN:
         return request.args.get("hub.challenge")
-    return "Hello World"
+    return "Verify endpoint has been triggered"
 
 #chooses a random message to send to the user
 def get_message():
