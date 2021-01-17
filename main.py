@@ -3,7 +3,6 @@ from urllib.request import urlopen
 import os
 import re
 
-# from bs4 import BeautifulSoup
 import requests
 from flask import Flask, request
 from pymessenger.bot import Bot
@@ -12,9 +11,7 @@ from dal import add_user, get_user, get_all_users, delete_user
 
 app = Flask(__name__)
 ACCESS_TOKEN = os.environ.get('REDIRECT_URI')
-# 'EAASDGuTBaFYBAIhnP3P4j5QOopRUndjpzVM4ZAwuPnsEuTPnd8RHdNPEKVVNPgrMc9tQt3OvmkPEpjaXr4uvNgXXPIsqIzFTJBaSTD7JUaZA3mZAp0VmZBIFrvcLCAP00KqIpVjALZCCvM6EgyVCydWAeQtfUlRdRgN3XNWAx8AZDZD'
 VERIFY_TOKEN = os.environ.get('VERIFY_TOKEN')
-# 'this_is_test_token'
 BOT = Bot(ACCESS_TOKEN)
 
 
@@ -38,22 +35,18 @@ def receive_message():
            for message in messaging:
                 print(message)
                 if message.get('message'):
-                    #Facebook Messenger ID for user so we know where to send response back to
                     recipient_id = message['sender']['id']
                     msg = message['message'].get('text')
                     if msg:
                         send_return_message(msg, recipient_id)
                     #if user sends us a GIF, photo,video, or any other non-text item
-                    if message['message'].get('attachments'):
-                        # response_sent_nontext = get_message()
-                        response_sent_nontext = puzzle_message()
-                        send_message(recipient_id, response_sent_nontext)
+                    # if message['message'].get('attachments'):
+                    #     response_sent_nontext = puzzle_message()
+                    #     send_message(recipient_id, response_sent_nontext)
         return "Message Processed"
 
 
 def send_return_message(msg, recipient_id):
-    print(msg)
-
     msg = msg.lower().replace(' ', '')
 
     if msg == "subscribe":
@@ -88,13 +81,13 @@ def send_return_message(msg, recipient_id):
         message2 = ("Chess puzzles are a good way to improve your skills as a chess player and are great exercises to do often. " +
                    "Super Chess Grandmasters such as Hikaru Nakamura do puzzles regularly.")
         message3 = "Chess puzzles are powered by lichess.org"
-
         message4 = "Here is a list of the commands that you may use:"
         message5 = "👉 \"Help\": This command."
-        message6 = "👉 \"Subscribe\": Use this command to initialize daily puzzles, if haven't done so already."
-        message7 = "👉 \"Send Puzzle\": Use to receive a random puzzle"
-        message8 = "👉 \"Unsubscribe\": Unsubscribe from daily problems."
-        message9 = "👉 \"Status\": Check to see if you are getting daily puzzles. 🧩"
+        message6 = "👉 \"Commands\": Shows you all of the available commands, which are also shown here."
+        message7 = "👉 \"Subscribe\": Use this command to initialize daily puzzles, if haven't done so already."
+        message8 = "👉 \"Send Puzzle\": Use to receive a random puzzle"
+        message9 = "👉 \"Unsubscribe\": Unsubscribe from daily problems."
+        message10 = "👉 \"Status\": Check to see if you are getting daily puzzles. 🧩"
 
         send_message(recipient_id, message1)
         send_message(recipient_id, message2)
@@ -105,6 +98,25 @@ def send_return_message(msg, recipient_id):
         send_message(recipient_id, message7)
         send_message(recipient_id, message8)
         send_message(recipient_id, message9)
+        send_message(recipient_id, message10)
+
+    elif msg == "commands":
+        message1 = "Here is a list of the commands that you may use:"
+        message2 = "👉 \"Help\": Explanation of the bot."
+        message3 = "👉 \"Commands\": This command."
+        message4 = "👉 \"Subscribe\": Use this command to initialize daily puzzles, if haven't done so already."
+        message5 = "👉 \"Send Puzzle\": Use to receive a random puzzle"
+        message6 = "👉 \"Unsubscribe\": Unsubscribe from daily puzzles."
+        message7 = "👉 \"Status\": Check to see if you are getting daily puzzles. 🧩"
+
+        send_message(recipient_id, message1)
+        send_message(recipient_id, message2)
+        send_message(recipient_id, message3)
+        send_message(recipient_id, message4)
+        send_message(recipient_id, message5)
+        send_message(recipient_id, message6)
+        send_message(recipient_id, message7)
+
 
     elif msg == "hi" or msg == "hello" or msg == "hey":
         message = "Hey there! :)"
@@ -136,23 +148,6 @@ def verify_fb_token(token_sent):
         return request.args.get("hub.challenge")
     return "Verify endpoint has been triggered"
 
-# def get_id(url):
-
-#     webpage = urlopen(url)
-#     soup = BeautifulSoup(webpage, 'html.parser')
-#     title = soup.find("meta",  property="og:title")
-#     for tag in soup.find_all("meta"):
-#         if tag.get("property", None) == "og:title":
-#             puzzle_id = tag.get("content", None)
-#         elif tag.get("property", None) == "og:url":
-#             puzzle_id = tag.get("content", None)
-#     print("This is puzzle id: ", puzzle_id)
-#     puzzle_id = re.search("#[a-zA-Z0-9]{5}",puzzle_id).group().replace("#", "")
-
-#     # r = requests.get(url)
-#     # if r.status_code == 200:
-#     # puzzle_id = re.search("#[a-zA-Z0-9]{5}",).group().replace("#", "")
-#     return puzzle_id
 
 def puzzle_message():
     topics = ['opening', 'middlegame', 'endgame', 'rookEndgame', 'bishopEndgame', 'pawnEndgame', 'knightEndgame',
@@ -162,7 +157,6 @@ def puzzle_message():
               'quietMove', 'xRayAttack', 'zugzwang']
 
     base_url = "https://lichess.org/training/{}"
-    # url = get_id("https://lichess.org/training/{}".format(choice(topics)))
     url = base_url.format(choice(topics))
 
     return "Here is your random puzzle for you to attempt:\n{}\nBest of luck! :)".format(url)
@@ -174,5 +168,4 @@ def send_message(recipient_id, response):
 
 
 if __name__ == '__main__':
-    print("App is now running...")
     app.run()
