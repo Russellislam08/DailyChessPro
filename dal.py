@@ -30,7 +30,7 @@ def get_cursor(conn):
 
 def get_all_users():
     conn = None
-    response = None
+    response = []
     try:
         conn = create_connection()
         c = get_cursor(conn)

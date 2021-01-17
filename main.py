@@ -7,12 +7,20 @@ import requests
 from flask import Flask, request
 from pymessenger.bot import Bot
 
-from dal import add_user, get_user, get_all_users
+from dal import add_user, get_user, get_all_users, delete_user
 
 app = Flask(__name__)
 ACCESS_TOKEN = 'EAASDGuTBaFYBAIhnP3P4j5QOopRUndjpzVM4ZAwuPnsEuTPnd8RHdNPEKVVNPgrMc9tQt3OvmkPEpjaXr4uvNgXXPIsqIzFTJBaSTD7JUaZA3mZAp0VmZBIFrvcLCAP00KqIpVjALZCCvM6EgyVCydWAeQtfUlRdRgN3XNWAx8AZDZD'
 VERIFY_TOKEN = 'this_is_test_token'
 BOT = Bot(ACCESS_TOKEN)
+
+
+@app.route("/sendpuzzle", methods=['GET', 'POST'])
+def send_daily_puzzle():
+    users = get_all_users()
+    [send_message(user.get('user_id'), puzzle_message()) for user in users]
+    return "Sent daily puzzle!"
+	
 
 @app.route("/", methods=['GET', 'POST'])
 def receive_message():
