@@ -4,9 +4,10 @@ import re
 
 # from bs4 import BeautifulSoup
 import requests
-
 from flask import Flask, request
 from pymessenger.bot import Bot
+
+from dal import add_user, get_user, get_all_users
 
 app = Flask(__name__)
 ACCESS_TOKEN = 'EAASDGuTBaFYBAIhnP3P4j5QOopRUndjpzVM4ZAwuPnsEuTPnd8RHdNPEKVVNPgrMc9tQt3OvmkPEpjaXr4uvNgXXPIsqIzFTJBaSTD7JUaZA3mZAp0VmZBIFrvcLCAP00KqIpVjALZCCvM6EgyVCydWAeQtfUlRdRgN3XNWAx8AZDZD'
@@ -46,26 +47,31 @@ def send_return_message(msg, recipient_id):
 
     if msg == "subscribe":
 
-        print("This clause happened")
-        # message1 = "♟️ Welcome to the Chess bot! This bot will periodically send you chess puzzles for you to do.♟️"
-        # message2 = "Chess puzzles are a good way to improve your skills as a chess player and are great exercises to do often."
-        message1 = "You have subscribed for daily chess puzzles! :)"
-        message2 = "You will receive a chess puzzle everyday at 20:00 EST. 👍 "
-        message3 = "Chess puzzles are powered by lichess.org"
+        if get_user(recipient_id):
+            message1 = "You are already subscribed for daily chess puzzles!"
 
-        send_message(recipient_id, message1)
-        send_message(recipient_id, message2)
-        send_message(recipient_id, message3)
+            send_message(recipient_id, message1)
+
+        else:
+            add_user(recipient_id)
+
+            message1 = "You have subscribed for daily chess puzzles! :)"
+            message2 = "You will receive a chess puzzle everyday at 20:00 EST. 👍 "
+            message3 = "Chess puzzles are powered by lichess.org"
+
+            send_message(recipient_id, message1)
+            send_message(recipient_id, message2)
+            send_message(recipient_id, message3)
 
     elif msg == "sendpuzzle":
         send_message(recipient_id, puzzle_message())
 
     elif msg == "status":
         # if registered
+        message = "You are currently {} for daily chess puzzles.".format(
+            "REGISTERED" if get_user(recipient_id) else "NOT REGISTERED")
 
-        # else
-        message1 = "You are currently not registered for daily chess puzzles."
-        send_message(recipient_id, message1)
+        send_message(recipient_id, message)
 
     elif msg == "help":
         message1 = "♟️ Welcome to the Daily Chess Bot!️. This Messenger bot can send you daily chess puzzles for you to do. ♟️"
@@ -91,11 +97,22 @@ def send_return_message(msg, recipient_id):
         send_message(recipient_id, message9)
 
     elif msg == "unsubscribe":
-        message1 = "❌ You have unsubscribed from the daily puzzles."
-        message2 = "To subscribe again in the future, use the subscribe command to do so."
 
-        send_message(recipient_id, message1)
-        send_message(recipient_id, message2)
+        if get_user(recipient_id):
+            delete_user(recipient_id)
+
+            message1 = "❌ You have unsubscribed from the daily puzzles."
+            message2 = "To subscribe again in the future, use the subscribe command to do so."
+
+            send_message(recipient_id, message1)
+            send_message(recipient_id, message2)
+        else:
+            message1 = "You are currently not subscribed for daily puzzles."
+            message2 = "There is no need to unsubscribe! :)"
+
+            send_message(recipient_id, message1)
+            send_message(recipient_id, message2)
+
 
     else:
         message1 = "Sorry 😥 I did not understand that command. Type help if you require assistance."
