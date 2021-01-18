@@ -35,4 +35,4 @@ You can go on the Messenger bot and start speaking to it. The following are a li
 - Flask backend for Webhooks
 - Google App Engine Cron jobs
 
-Disclaimer: The bot is not public yet due to Facebook's limitations.
+**Disclaimer: The bot is not public yet due to Facebook's limitations.**
